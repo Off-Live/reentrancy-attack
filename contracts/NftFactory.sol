@@ -9,13 +9,16 @@ contract NftFactory is ERC721Enumerable {
     uint256 MAX_MINT_PER_TX = 50;
     uint256 price = 0.001 ether;
 
+    string public constant TOKEN_NAME = "OffNft";
+    string public constant TOKEN_SYMBOL = "OFF";
+
     constructor() ERC721(TOKEN_NAME, TOKEN_SYMBOL) {
     }
 
     function mintNFT(uint256 numberOfTokens) public payable {
-        require(numberOfTokens <= maxPurchasePerMint, "Tried to mint too many ghosts");
-        require(totalSupply() + numberOfTokens <= MAX_GHOSTS, "Purchase would exceed max supply of ghosts");
-        require(ghostPrice * numberOfTokens <= msg.value, "inefficient ether");
+        require(numberOfTokens <= MAX_MINT_PER_TX, "Tried to mint too many nfts");
+        require(totalSupply() + numberOfTokens <= MAX_SUPPLY, "Purchase amount would exceed max supply");
+        require(price * numberOfTokens <= msg.value, "inefficient ether");
 
         uint256 count = 0;
         for (uint256 i = 0; i < numberOfTokens; i++) {

@@ -16,9 +16,7 @@ contract EtherStore {
         require(_weiToWithdraw <= withdrawalLimit);
         require(block.timestamp >= lastWithdrawTime[msg.sender]);
         (bool success, ) = msg.sender.call{value: _weiToWithdraw}("");
-        require(success, "failed to send ether");
         balances[msg.sender] -= _weiToWithdraw;
         lastWithdrawTime[msg.sender] = block.timestamp;
     }
-
 }

